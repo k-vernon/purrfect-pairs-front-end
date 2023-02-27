@@ -1,5 +1,5 @@
 // npm modules 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 
 // page components
@@ -8,6 +8,7 @@ import Login from './pages/Login/Login'
 import Landing from './pages/Landing/Landing'
 import Profiles from './pages/Profiles/Profiles'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
+import AdoptionPosts from './pages/AdoptionPosts/AdoptionPosts'
 
 // components
 import NavBar from './components/NavBar/NavBar'
@@ -15,17 +16,32 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 
 // services
 import * as authService from './services/authService'
+import * as adoptionPostService from './services/adoptionPostService'
 
 // stylesheets
 import './App.css'
 
 // types
-import { User } from './types/models'
+import { AdoptionPost, User } from './types/models'
 
 function App(): JSX.Element {
   const navigate = useNavigate()
   
   const [user, setUser] = useState<User | null>(authService.getUser())
+  const [adoptionPosts, setAdoptionPosts] = useState<AdoptionPost[]>([])
+
+  useEffect((): void => {
+    const fetchAdoptionPosts = async (): Promise<void> => {
+      try {
+        const adoptionPostData: AdoptionPost[] = await adoptionPostService.getAllAdoptionPosts()
+        setAdoptionPosts(adoptionPostData)
+      } catch (error) {
+        console.log(error);     
+      }
+    }
+    fetchAdoptionPosts()
+  }, [])
+
 
   const handleLogout = (): void => {
     authService.logout()
@@ -64,6 +80,12 @@ function App(): JSX.Element {
             <ProtectedRoute user={user}>
               <ChangePassword handleAuthEvt={handleAuthEvt} />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/adoption-posts"
+          element={
+            <AdoptionPosts user={user} posts={adoptionPosts} />
           }
         />
       </Routes>
