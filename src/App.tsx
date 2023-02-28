@@ -10,8 +10,6 @@ import Profiles from './pages/Profiles/Profiles'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
 import AdoptionPosts from './pages/AdoptionPosts/AdoptionPosts'
 import CreatePost from './pages/CreatePost/CreatePost'
-import CatPosts from './pages/AdoptionPosts/CatPosts/CatPosts'
-import DogPosts from './pages/AdoptionPosts/DogPosts/DogPosts'
 
 // components
 import NavBar from './components/NavBar/NavBar'
@@ -113,18 +111,6 @@ function App(): JSX.Element {
           path="/adoption-posts"
           element={
             <AdoptionPosts user={user} posts={adoptionPosts} />
-          }
-        />
-        <Route
-          path="/cat-posts"
-          element={
-            <CatPosts user={user} posts={adoptionPosts} />
-          }
-        />
-        <Route
-          path="/dog-posts"
-          element={
-            <DogPosts user={user} posts={adoptionPosts} />
           }
         />
         <Route

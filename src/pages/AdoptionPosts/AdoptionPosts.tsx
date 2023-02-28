@@ -1,37 +1,59 @@
 // npm modules
 import { useState } from 'react'
 
-
-
 // components
 import AdoptionPostCard from '../../components/AdoptionPost/AdoptionPostCard'
+import DogPostCard from '../../components/AdoptionPost/DogPostCard/DogPostCard'
+import CatPostCard from '../../components/AdoptionPost/CatPostCard/CatPostCard'
 
-//types
+// types
 import { AdoptionPost, User } from '../../types/models'
 
 // stylesheets
 import styles from './AdoptionPosts.module.css'
 
-// types
 interface AdoptionPostsProps {
   posts: AdoptionPost[];
   user: User | null;
-
-} 
+}
 
 const AdoptionPosts = (props: AdoptionPostsProps): JSX.Element => {
   const { posts, user } = props
-  posts.map((post: AdoptionPost) =>
-    console.log("Posts", post)
-    )
+  const [showAll, setShowAll] = useState(true)
+  const [showDogs, setShowDogs] = useState(false)
+  const [showCats, setShowCats] = useState(false)
+
+  const handleShowAll = () => {
+    setShowAll(true)
+    setShowDogs(false)
+    setShowCats(false)
+  }
+
+  const handleShowDogs = () => {
+    setShowAll(false)
+    setShowDogs(true)
+    setShowCats(false)
+  }
+
+  const handleShowCats = () => {
+    setShowAll(false)
+    setShowDogs(false)
+    setShowCats(true)
+  }
+
+  const sortPosts = [...posts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+
   return (
     <main className={styles.container}>
-
-      <h1>Adoption Posts</h1> 
-      {posts.map((post: AdoptionPost) =>
-        <AdoptionPostCard user={user} post={post}/>
-      
-      )}
+      <h1>Adoption Posts</h1>
+      <div className={styles.buttons}>
+        <button onClick={handleShowAll}>All</button>
+        <button onClick={handleShowDogs}>Dogs</button>
+        <button onClick={handleShowCats}>Cats</button>
+      </div>
+      {showAll && sortPosts.map((post: AdoptionPost) => <AdoptionPostCard user={user} post={post} />)}
+      {showDogs && sortPosts.filter(post => post.species === "Dog").map((post: AdoptionPost) => <DogPostCard user={user} post={post} />)}
+      {showCats && sortPosts.filter(post => post.species === "Cat").map((post: AdoptionPost) => <CatPostCard user={user} post={post} />)}
     </main>
   )
 }
