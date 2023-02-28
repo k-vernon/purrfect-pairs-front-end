@@ -9,10 +9,12 @@ import Landing from './pages/Landing/Landing'
 import Profiles from './pages/Profiles/Profiles'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
 import AdoptionPosts from './pages/AdoptionPosts/AdoptionPosts'
+import CreatePost from './pages/CreatePost/CreatePost'
 
 // components
 import NavBar from './components/NavBar/NavBar'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
+import DetailsCard from './components/DetailsCard/DetailsCard'
 
 // services
 import * as authService from './services/authService'
@@ -23,12 +25,16 @@ import './App.css'
 
 // types
 import { AdoptionPost, User } from './types/models'
+import { CreatePostFormData } from './types/forms'
+
+
 
 function App(): JSX.Element {
   const navigate = useNavigate()
   
   const [user, setUser] = useState<User | null>(authService.getUser())
   const [adoptionPosts, setAdoptionPosts] = useState<AdoptionPost[]>([])
+
 
   useEffect((): void => {
     const fetchAdoptionPosts = async (): Promise<void> => {
@@ -41,6 +47,18 @@ function App(): JSX.Element {
     }
     fetchAdoptionPosts()
   }, [])
+
+ 
+  const handleAddPost = async (formData: CreatePostFormData) => {
+    try {
+      const newAdoptionPost = await adoptionPostService.createAdoptionPost(formData);
+      setAdoptionPosts([...adoptionPosts, newAdoptionPost]);
+      console.log("formData", formData)
+    } catch (error) {
+      console.log("Handle Add Error:", error)
+      console.error(error);
+    }
+  }
 
 
   const handleLogout = (): void => {
@@ -83,9 +101,23 @@ function App(): JSX.Element {
           }
         />
         <Route
+          path="/adoption-posts/new"
+            element={
+              <ProtectedRoute user={user}>
+                <CreatePost user={user} handleAddPost={handleAddPost} />
+              </ProtectedRoute>
+            }
+        />
+        <Route
           path="/adoption-posts"
           element={
             <AdoptionPosts user={user} posts={adoptionPosts} />
+          }
+        />
+        <Route
+          path="/adoption-post/:id"
+          element={
+            <DetailsCard  />
           }
         />
       </Routes>

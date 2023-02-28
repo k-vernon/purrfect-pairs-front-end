@@ -1,6 +1,7 @@
 /* ---------===== custom props ====--------- */
 
 export interface AdoptionPost {
+  id: number;
   author: number;
   photo?: string;
   species: string;

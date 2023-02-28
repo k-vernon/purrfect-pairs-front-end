@@ -8,24 +8,23 @@ import { AdoptionPost, User } from '../../types/models'
 import styles from './AdoptionPostCard.module.css'
 
 interface AdoptionPostCardProps {
-  posts: AdoptionPost[];
+  post: AdoptionPost;
   user: User | null;
 
 }
 
 const AdoptionPostCard = (props: AdoptionPostCardProps): JSX.Element => {
-  const { posts, user } = props
+  const { post, user } = props
   return (
     <>
       <div>
-        {posts.map((animal: AdoptionPost): JSX.Element => (
+ 
           <>
-            <Link to='/'>
-              <img src={animal.photo}/>
-              <h2>{animal.name}</h2>
+            <Link to={`/adoption-post/${post.id}`} state={{post}}>
+              <img src={post.photo}/>
+              <h2>{post.name}</h2>
             </Link>
           </>
-        ))}
       </div>
     </>
   )

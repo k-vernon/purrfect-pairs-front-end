@@ -21,12 +21,17 @@ interface AdoptionPostsProps {
 
 const AdoptionPosts = (props: AdoptionPostsProps): JSX.Element => {
   const { posts, user } = props
-
+  posts.map((post: AdoptionPost) =>
+    console.log("Posts", post)
+    )
   return (
     <main className={styles.container}>
 
-      <h1>Adoption Posts</h1>
-      <AdoptionPostCard {...props} />
+      <h1>Adoption Posts</h1> 
+      {posts.map((post: AdoptionPost) =>
+        <AdoptionPostCard user={user} post={post}/>
+      
+      )}
     </main>
   )
 }
