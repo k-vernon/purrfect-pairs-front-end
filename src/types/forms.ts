@@ -1,8 +1,6 @@
 /* ---------==== custom forms ====--------- */
 
 export interface CreatePostFormData {
-  id: number;
-  author: number;
   photo?: string;
   species: string;
   name: string,
@@ -13,8 +11,6 @@ export interface CreatePostFormData {
   coatColor: string;
   adoptionFee: number;
   about?: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 

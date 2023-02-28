@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Navigate, useNavigate } from 'react-router';
 
 // types
 import { CreatePostFormData } from '../../types/forms'
@@ -14,6 +15,7 @@ interface CreatePostFormProps {
 
 const CreatePostForm = (props: CreatePostFormProps): JSX.Element => {
   const { user, handleAddPost } = props
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState<CreatePostFormData>({
     photo: '',
@@ -26,22 +28,23 @@ const CreatePostForm = (props: CreatePostFormProps): JSX.Element => {
     coatColor: '',
     adoptionFee: 0,
     about: '',
-  });
+  })
 
   const handleSubmit = (evt: React.FormEvent<HTMLFormElement>): void => {
-    handleAddPost(formData);
-    evt.preventDefault();
-  };
+    handleAddPost(formData)
+    evt.preventDefault()
+    navigate('/adoption-posts')
+  }
 
   const handleChange = (
     evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
-    setFormData({ ...formData, [evt.target.name]: evt.target.value });
-  };
+    setFormData({ ...formData, [evt.target.name]: evt.target.value })
+  }
 
   const handleSpeciesChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({ ...formData, species: evt.target.value });
-  };
+    setFormData({ ...formData, species: evt.target.value })
+  }
   
 
   return (

@@ -18,13 +18,10 @@ const AdoptionPostCard = (props: AdoptionPostCardProps): JSX.Element => {
   return (
     <>
       <div>
- 
-          <>
-            <Link to={`/adoption-post/${post.id}`} state={{post}}>
-              <img src={post.photo}/>
-              <h2>{post.name}</h2>
-            </Link>
-          </>
+        <Link to={`/adoption-post/${post.id}`} state={{post}}>
+          <img src={post.photo}/>
+          <h2>{post.name}</h2>
+        </Link>
       </div>
     </>
   )

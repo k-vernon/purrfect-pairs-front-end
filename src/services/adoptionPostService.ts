@@ -3,6 +3,7 @@ import * as tokenService from './tokenService'
 
 // types
 import { AdoptionPost } from '../types/models'
+import { CreatePostFormData } from '../types/forms'
 
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/posts`
 
@@ -28,16 +29,17 @@ async function getAdoptionPostById(id: number): Promise<AdoptionPost> {
   }
 }
 
-async function createAdoptionPost(adoptionPost: AdoptionPost): Promise<AdoptionPost> {
+async function createAdoptionPost(formData: CreatePostFormData): Promise<AdoptionPost> {
   try {
     const res = await fetch(BASE_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${tokenService.getToken()}`,
+        'Authorization': `Bearer ${tokenService.getToken()}`,
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(adoptionPost),
+      body: JSON.stringify(formData),
     })
-    console.log("Create Service:", adoptionPost)
+    console.log("Create Service:", formData)
     return await res.json() as AdoptionPost
   } catch (error) {
     throw error;

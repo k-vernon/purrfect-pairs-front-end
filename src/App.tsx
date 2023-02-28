@@ -10,6 +10,8 @@ import Profiles from './pages/Profiles/Profiles'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
 import AdoptionPosts from './pages/AdoptionPosts/AdoptionPosts'
 import CreatePost from './pages/CreatePost/CreatePost'
+import CatPosts from './pages/AdoptionPosts/CatPosts/CatPosts'
+import DogPosts from './pages/AdoptionPosts/DogPosts/DogPosts'
 
 // components
 import NavBar from './components/NavBar/NavBar'
@@ -28,13 +30,13 @@ import { AdoptionPost, User } from './types/models'
 import { CreatePostFormData } from './types/forms'
 
 
-
 function App(): JSX.Element {
   const navigate = useNavigate()
   
   const [user, setUser] = useState<User | null>(authService.getUser())
   const [adoptionPosts, setAdoptionPosts] = useState<AdoptionPost[]>([])
-
+  
+  console.log("User Log:", user)
 
   useEffect((): void => {
     const fetchAdoptionPosts = async (): Promise<void> => {
@@ -51,9 +53,8 @@ function App(): JSX.Element {
  
   const handleAddPost = async (formData: CreatePostFormData) => {
     try {
-      const newAdoptionPost = await adoptionPostService.createAdoptionPost(formData);
-      setAdoptionPosts([...adoptionPosts, newAdoptionPost]);
       console.log("formData", formData)
+      await adoptionPostService.createAdoptionPost(formData)
     } catch (error) {
       console.log("Handle Add Error:", error)
       console.error(error);
@@ -112,6 +113,18 @@ function App(): JSX.Element {
           path="/adoption-posts"
           element={
             <AdoptionPosts user={user} posts={adoptionPosts} />
+          }
+        />
+        <Route
+          path="/cat-posts"
+          element={
+            <CatPosts user={user} posts={adoptionPosts} />
+          }
+        />
+        <Route
+          path="/dog-posts"
+          element={
+            <DogPosts user={user} posts={adoptionPosts} />
           }
         />
         <Route
