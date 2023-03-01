@@ -9,7 +9,9 @@
 
 ## <p style= "text-align: center;"> [Launch App](https://purrfect-pairs.netlify.app/)</p> <p style= "text-align: center; font-size: 20px"> 
 
-[View back end repo here](https://github.com/k-vernon/purrfect-pairs-back-end)
+This is the front-end repository. 
+<br>
+Click to view the [back-end repository](https://github.com/k-vernon/purrfect-pairs-back-end)
 
 ## Technologies Used
 
