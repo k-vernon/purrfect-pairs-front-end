@@ -2,14 +2,14 @@ import { useState, useEffect } from "react"
 
 // types
 import { AdoptionPost, User } from "../../types/models"
-import { CreatePostFormData } from "../../types/forms";
+import { CreatePostFormData, PhotoFormData } from "../../types/forms";
 
 //components
 import CreatePostForm from "../../components/CreatePostForm/CreatePostForm"
 
 interface CreatePostProps {
   user: User | null;
-  handleAddPost: (form: CreatePostFormData) => void;
+  handleAddPost: (form: CreatePostFormData, photoData: PhotoFormData) => void;
 }
 
 

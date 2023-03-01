@@ -10,7 +10,7 @@ import CatPostCard from '../../components/AdoptionPost/CatPostCard/CatPostCard'
 import { AdoptionPost, User } from '../../types/models'
 
 // stylesheets
-import styles from './AdoptionPosts.module.css'
+// import styles from './AdoptionPosts.module.css'
 
 interface AdoptionPostsProps {
   posts: AdoptionPost[];
@@ -44,16 +44,16 @@ const AdoptionPosts = (props: AdoptionPostsProps): JSX.Element => {
   const sortPosts = [...posts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
   return (
-    <main className={styles.container}>
+    <main>
       <h1>Adoption Posts</h1>
-      <div className={styles.buttons}>
+      <div >
         <button onClick={handleShowAll}>All</button>
         <button onClick={handleShowDogs}>Dogs</button>
         <button onClick={handleShowCats}>Cats</button>
       </div>
-      {showAll && sortPosts.map((post: AdoptionPost) => <AdoptionPostCard user={user} post={post} />)}
-      {showDogs && sortPosts.filter(post => post.species === "Dog").map((post: AdoptionPost) => <DogPostCard user={user} post={post} />)}
-      {showCats && sortPosts.filter(post => post.species === "Cat").map((post: AdoptionPost) => <CatPostCard user={user} post={post} />)}
+      {showAll && sortPosts.map((post: AdoptionPost) => <AdoptionPostCard key={post.id} user={user} post={post} />)}
+      {showDogs && sortPosts.filter(post => post.species === "Dog").map((post: AdoptionPost) => <DogPostCard key={post.id} user={user} post={post} />)}
+      {showCats && sortPosts.filter(post => post.species === "Cat").map((post: AdoptionPost) => <CatPostCard key={post.id} user={user} post={post} />)}
     </main>
   )
 }

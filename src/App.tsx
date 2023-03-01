@@ -26,7 +26,7 @@ import './App.css'
 
 // types
 import { AdoptionPost, User } from './types/models'
-import { CreatePostFormData } from './types/forms'
+import { CreatePostFormData, EditPostFormData, PhotoFormData } from './types/forms'
 
 
 function App(): JSX.Element {
@@ -50,15 +50,52 @@ function App(): JSX.Element {
   }, [])
 
  
-  const handleAddPost = async (formData: CreatePostFormData) => {
+  const handleAddPost = async (formData: CreatePostFormData, photoFormData: PhotoFormData) => {
     try {
       console.log("formData", formData)
-      await adoptionPostService.createAdoptionPost(formData)
+      const newPost = await adoptionPostService.createAdoptionPost(formData)
+      if (photoFormData.photo) {
+        const photoData = new FormData()
+        photoData.append('photo', photoFormData.photo)        
+        await adoptionPostService.addAdoptionPostPhoto(photoData, newPost.id)
+      }
+      adoptionPosts.push(newPost)
+      setAdoptionPosts(adoptionPosts)
     } catch (error) {
       console.log("Handle Add Error:", error)
       console.error(error);
     }
   }
+
+  const handleDeletePost = async (id: number) => {
+    try {
+      await adoptionPostService.deleteAdoptionPostById(id)
+      setAdoptionPosts(adoptionPosts.filter(a => a.id !== id))
+      navigate('/adoption-posts')
+      console.log(id)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+
+  const handleUpdatePost = async (formData: EditPostFormData, photoFormData: PhotoFormData) => {
+    try {
+      const updatedPost = await adoptionPostService.updateAdoptionPostById(formData)
+      if (photoFormData.photo) {
+        const photoData = new FormData()
+        photoData.append('photo', photoFormData.photo)        
+        await adoptionPostService.addAdoptionPostPhoto(photoData, updatedPost.id)
+      }
+      setAdoptionPosts(adoptionPosts.map((a) => (
+        (a.id === updatedPost.id) ? updatedPost : a
+      )))
+      navigate('/adoption-posts')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
 
 
   const handleLogout = (): void => {
@@ -112,7 +149,7 @@ function App(): JSX.Element {
           path="/adoption-posts/:id/edit"
             element={
               <ProtectedRoute user={user}>
-                <UpdatePost user={user}  />
+                <UpdatePost user={user} handleUpdatePost={handleUpdatePost} />
               </ProtectedRoute>
             }
         />
@@ -125,7 +162,7 @@ function App(): JSX.Element {
         <Route
           path="/adoption-post/:id"
           element={
-            <DetailsCard user={user} />
+            <DetailsCard user={user} handleDeletePost={handleDeletePost}/>
           }
         />
       </Routes>

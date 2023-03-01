@@ -13,13 +13,14 @@ import { AdoptionPost, User } from '../../types/models'
 import styles from './AdoptionPostCard.module.css'
 
 interface DetailCardProps {
-  user: User 
+  user: User | null;
+  handleDeletePost: (id: number) => void;
 }
 
 
 const DetailsCard = (props: DetailCardProps): JSX.Element => {
   const location = useLocation()
-  const { user } = props
+  const { user, handleDeletePost } = props
   const navigate = useNavigate()
   const { post } = location.state
   console.log("this is post!", post)
@@ -35,15 +36,15 @@ const DetailsCard = (props: DetailCardProps): JSX.Element => {
 
 
 
-  const handleDeletePost = async (id: number) => {
-    try {
-      await adoptionPostService.deleteAdoptionPostById(id)
-      navigate('/adoption-posts')
-      console.log(id)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  // const handleDeletePost = async (id: number) => {
+  //   try {
+  //     await adoptionPostService.deleteAdoptionPostById(id)
+  //     navigate('/adoption-posts')
+  //     console.log(id)
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
 
 
   let ageText: string = "";
@@ -63,7 +64,7 @@ const DetailsCard = (props: DetailCardProps): JSX.Element => {
   
   return (
     <>
-    {post.author === user.id && (
+    {post.author === user?.id && (
       <>
         <div>
           <Link to={`/adoption-posts/${post.id}/edit`} state={post}>

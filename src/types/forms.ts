@@ -1,7 +1,19 @@
 /* ---------==== custom forms ====--------- */
 
 export interface CreatePostFormData {
-  photo?: string;
+  species: string;
+  name: string,
+  breed: string,
+  location: string,
+  age: number,
+  gender: string;
+  coatColor: string;
+  adoptionFee: number;
+  about?: string;
+}
+
+export interface EditPostFormData {
+  id?: number,
   species: string;
   name: string,
   breed: string,
@@ -35,5 +47,5 @@ export interface ChangePasswordFormData {
 }
 
 export interface PhotoFormData {
-  photo: File | null;
+  photo?: File | null;
 }

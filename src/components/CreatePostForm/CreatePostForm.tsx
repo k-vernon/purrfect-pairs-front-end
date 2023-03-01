@@ -2,23 +2,23 @@ import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router';
 
 // types
-import { CreatePostFormData } from '../../types/forms'
-import { AdoptionPost, User } from '../../types/models'
+import { CreatePostFormData, EditPostFormData, PhotoFormData } from '../../types/forms'
+import { User } from '../../types/models'
 
 //styles 
 import styles from './CreatePostForm.module.css'
 
 interface CreatePostFormProps {
   user: User | null;
-  handleAddPost: (formData: CreatePostFormData) => void
+  handleAddPost: (editPostFormData: EditPostFormData, photoData: PhotoFormData) => void
 }
 
 const CreatePostForm = (props: CreatePostFormProps): JSX.Element => {
+  
   const { user, handleAddPost } = props
   const navigate = useNavigate()
 
-  const [formData, setFormData] = useState<CreatePostFormData>({
-    photo: '',
+  const [formData, setFormData] = useState<EditPostFormData>({
     species: 'Cat',
     name: '',
     breed: '',
@@ -30,11 +30,9 @@ const CreatePostForm = (props: CreatePostFormProps): JSX.Element => {
     about: '',
   })
 
-  const handleSubmit = (evt: React.FormEvent<HTMLFormElement>): void => {
-    handleAddPost(formData)
-    evt.preventDefault()
-    navigate('/adoption-posts')
-  }
+  const [photoData, setPhotoData] = useState<PhotoFormData>({
+    photo: null
+  })
 
   const handleChange = (
     evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -42,24 +40,40 @@ const CreatePostForm = (props: CreatePostFormProps): JSX.Element => {
     setFormData({ ...formData, [evt.target.name]: evt.target.value })
   }
 
+  const handleChangePhoto = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    if (evt.target.files) {
+      setPhotoData({ photo: evt.target.files.item(0) })
+    }
+  }
+    
   const handleSpeciesChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData({ ...formData, species: evt.target.value })
   }
-  
+    
+  const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    evt.preventDefault()
+    await props.handleAddPost(formData, photoData)
+    navigate('/adoption-posts')
+  }
+  console.log('Form Data', formData)
 
   return (
     <div>
       <h1>New Adoption Post</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="photo">Photo:</label>
+          <label className='button' htmlFor="photo-upload">
+            Upload Photo
+          </label>
+          <br/>
           <input
             type="file"
+            className='custom-upload'
+            id="photo-upload"
             name="photo"
-            id="photo"
-            value={formData.photo}
-            onChange={handleChange}
+            onChange={handleChangePhoto}
           />
+          {photoData.photo ? <p> Photo Submitted</p> : <p id='photo-status'>No Photo</p>}
         </div>
         <div>
         <br />

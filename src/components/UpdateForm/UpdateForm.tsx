@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router'
+import { useLocation, Navigate, useNavigate } from 'react-router'
 
 // types
-import { CreatePostFormData } from '../../types/forms'
+import { CreatePostFormData, EditPostFormData, PhotoFormData } from '../../types/forms'
 import { User } from '../../types/models'
 
 //services
@@ -11,44 +11,73 @@ import * as adoptionPostService  from '../../services/adoptionPostService'
 //styles 
 import styles from './CreatePostForm.module.css'
 
-interface CreatePostFormProps {
+interface UpdatePostFormProps {
   user: User | null;
+  handleUpdatePost: (formData: EditPostFormData, photoFormData: PhotoFormData) => void;
 }
 
 
 
-const UpdatePostForm = (props: CreatePostFormProps): JSX.Element => {
+const UpdatePostForm = (props: UpdatePostFormProps): JSX.Element => {
   let location = useLocation()
+  let navigate = useNavigate()
   let state = location.state
   console.log(location.state)
 
-  const [formData, setFormData] = useState<CreatePostFormData>(state)
+  // const [formData, setFormData] = useState<CreatePostFormData>(state)
 
-  const handleUpdatePost = async (id: number, formData: CreatePostFormData) => {
-    try {
-      const post = await adoptionPostService.updateAdoptionPostById(id, formData)
-      console.log(post)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const [formData, setFormData] = useState<CreatePostFormData>(state || {
+    species: 'Cat',
+    name: '',
+    breed: '',
+    location: '',
+    age: 0,
+    gender: 'Male',
+    coatColor: '',
+    adoptionFee: 0,
+    about: ''
+  })
 
-  const handleSubmit = (evt: React.FormEvent<HTMLFormElement>): void => {
-    evt.preventDefault()
-    handleUpdatePost(state.id, formData)
-  }
 
+  // const handleUpdatePost = async (formData: EditPostFormData, photoFormData: PhotoFormData) => {
+  //   try {
+  //     const updatedPost = await adoptionPostService.updateAdoptionPostById(formData)
+  //     if (photoFormData.photo) {
+  //       const photoData = new FormData()
+  //       photoData.append('photo', photoFormData.photo)        
+  //       await adoptionPostService.addAdoptionPostPhoto(photoData, updatedPost.id)
+  //     }
+  //     navigate('/adoption-posts')
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
+
+  const [photoData, setPhotoData] = useState<PhotoFormData>({
+    photo: null
+  })
+  
   const handleChange = (
     evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
-    setFormData({ ...formData, [evt.target.name]: evt.target.value })
-    console.log(formData)
-  }
-
-  const handleSpeciesChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({ ...formData, species: evt.target.value })
-  }
-
+    ): void => {
+      setFormData({ ...formData, [evt.target.name]: evt.target.value })
+      console.log(formData)
+    }
+    
+    const handleChangePhoto = (evt: React.ChangeEvent<HTMLInputElement>) => {
+      if (evt.target.files) {
+        setPhotoData({ photo: evt.target.files.item(0) })
+      }
+    }
+    
+    const handleSpeciesChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
+      setFormData({ ...formData, species: evt.target.value })
+    }
+    
+    const handleSubmit = (evt: React.FormEvent<HTMLFormElement>): void => {
+      evt.preventDefault()
+      props.handleUpdatePost(formData, photoData)
+    }
     
   console.log("Form Data:", formData)
 
@@ -56,15 +85,19 @@ const UpdatePostForm = (props: CreatePostFormProps): JSX.Element => {
     <div>
       <h1>Update Adoption Post</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="photo">Photo:</label>
+      <div>
+          <label className='button' htmlFor="photo-upload">
+            Upload Photo
+          </label>
+          <br/>
           <input
             type="file"
+            className='custom-upload'
+            id="photo-upload"
             name="photo"
-            id="photo"
-            value={formData.photo}
-            onChange={handleChange}
+            onChange={handleChangePhoto}
           />
+          {photoData.photo ? <p> Photo Submitted</p> : <p id='photo-status'>No Photo</p>}
         </div>
         <div>
         <br />

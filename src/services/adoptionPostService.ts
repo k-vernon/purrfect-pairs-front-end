@@ -3,7 +3,7 @@ import * as tokenService from './tokenService'
 
 // types
 import { AdoptionPost } from '../types/models'
-import { CreatePostFormData } from '../types/forms'
+import { CreatePostFormData, EditPostFormData } from '../types/forms'
 
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/posts`
 
@@ -47,11 +47,10 @@ async function createAdoptionPost(formData: CreatePostFormData): Promise<Adoptio
 }
 
 async function updateAdoptionPostById(
-  id: number,
-  formData: CreatePostFormData
+  formData: EditPostFormData
 ): Promise<AdoptionPost> {
   try {
-    const res = await fetch(`${BASE_URL}/${id}`, {
+    const res = await fetch(`${BASE_URL}/${formData.id}`, {
       method: "PUT",
       headers: {
         'Authorization': `Bearer ${tokenService.getToken()}`,
@@ -80,6 +79,24 @@ async function deleteAdoptionPostById(id: number): Promise<AdoptionPost> {
   }
 }
 
+async function addAdoptionPostPhoto(
+  photoData: FormData, 
+  id: number
+): Promise<string> {
+  try {
+    const res = await fetch(`${BASE_URL}/${id}/add-photo`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${tokenService.getToken()}`
+      },
+      body: photoData
+    })
+    return await res.json() as string
+  } catch (error) {
+    throw error
+  }
+}
+
 
 
 export { 
@@ -87,5 +104,6 @@ export {
   getAdoptionPostById,
   createAdoptionPost,
   updateAdoptionPostById,
-  deleteAdoptionPostById
+  deleteAdoptionPostById,
+  addAdoptionPostPhoto
 }
