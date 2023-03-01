@@ -17,7 +17,7 @@ const NavBar = (props: NavBarProps): JSX.Element => {
       {user ?
         <ul>
           <li>Welcome, {user.name}</li>
-          
+          <li><NavLink to="/" >Home</NavLink></li>
           {/* <li><NavLink to="/profiles">Profiles</NavLink></li> */}
           {/* <li><NavLink to="/change-password">Change Password</NavLink></li> */}
           <li><NavLink to="/adoption-posts/new">Create Post</NavLink></li>
@@ -26,6 +26,7 @@ const NavBar = (props: NavBarProps): JSX.Element => {
         </ul>
       :
         <ul>
+          <li><NavLink to="/" >Home</NavLink></li>
           <li><NavLink to="/login">Log In</NavLink></li>
           <li><NavLink to="/signup">Sign Up</NavLink></li>
           <li><NavLink to="/adoption-posts">Pet Adoption</NavLink></li>
