@@ -48,15 +48,16 @@ async function createAdoptionPost(formData: CreatePostFormData): Promise<Adoptio
 
 async function updateAdoptionPostById(
   id: number,
-  adoptionPost: AdoptionPost
+  formData: CreatePostFormData
 ): Promise<AdoptionPost> {
   try {
     const res = await fetch(`${BASE_URL}/${id}`, {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${tokenService.getToken()}`,
+        'Authorization': `Bearer ${tokenService.getToken()}`,
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(adoptionPost),
+      body: JSON.stringify(formData),
     })
     return await res.json() as AdoptionPost
   } catch (error) {
@@ -68,7 +69,10 @@ async function deleteAdoptionPostById(id: number): Promise<AdoptionPost> {
   try {
     const res = await fetch(`${BASE_URL}/${id}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${tokenService.getToken()}` },
+      headers: { 
+        'Authorization': `Bearer ${tokenService.getToken()}` ,
+        'Content-Type': 'application/json'
+      },
     })
     return await res.json() as AdoptionPost
   } catch (error) {

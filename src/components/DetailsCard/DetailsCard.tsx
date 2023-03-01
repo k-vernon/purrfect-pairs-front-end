@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 //services
@@ -12,10 +12,15 @@ import { AdoptionPost, User } from '../../types/models'
 //stylesheets
 import styles from './AdoptionPostCard.module.css'
 
+interface DetailCardProps {
+  user: User 
+}
 
 
-const DetailsCard = (): JSX.Element => {
+const DetailsCard = (props: DetailCardProps): JSX.Element => {
   const location = useLocation()
+  const { user } = props
+  const navigate = useNavigate()
   const { post } = location.state
   console.log("this is post!", post)
   const [adoptionPost, setAdoptionPost] = useState<AdoptionPost>()
@@ -27,6 +32,18 @@ const DetailsCard = (): JSX.Element => {
     };
     fetchAdoptionPost();
   }, [post.id]);
+
+
+
+  const handleDeletePost = async (id: number) => {
+    try {
+      await adoptionPostService.deleteAdoptionPostById(id)
+      navigate('/adoption-posts')
+      console.log(id)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
 
   let ageText: string = "";
@@ -42,9 +59,20 @@ const DetailsCard = (): JSX.Element => {
     ageText = "Adult";
   }
   
+  console.log('User:', user)
   
   return (
     <>
+    {post.author === user.id && (
+      <>
+        <div>
+          <Link to={`/adoption-posts/${post.id}/edit`} state={post}>
+            <button >Edit</button>
+          </Link>
+          <button onClick={() => handleDeletePost(post.id)}>Delete</button>
+        </div>
+      </>
+    )}
       <div>
         <img src={post.photo}/>
         <h2>{post.name}</h2>

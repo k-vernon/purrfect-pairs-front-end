@@ -10,6 +10,7 @@ import Profiles from './pages/Profiles/Profiles'
 import ChangePassword from './pages/ChangePassword/ChangePassword'
 import AdoptionPosts from './pages/AdoptionPosts/AdoptionPosts'
 import CreatePost from './pages/CreatePost/CreatePost'
+import UpdatePost from './pages/UpdatePost/UpdatePost'
 
 // components
 import NavBar from './components/NavBar/NavBar'
@@ -108,6 +109,14 @@ function App(): JSX.Element {
             }
         />
         <Route
+          path="/adoption-posts/:id/edit"
+            element={
+              <ProtectedRoute user={user}>
+                <UpdatePost user={user}  />
+              </ProtectedRoute>
+            }
+        />
+        <Route
           path="/adoption-posts"
           element={
             <AdoptionPosts user={user} posts={adoptionPosts} />
@@ -116,7 +125,7 @@ function App(): JSX.Element {
         <Route
           path="/adoption-post/:id"
           element={
-            <DetailsCard  />
+            <DetailsCard user={user} />
           }
         />
       </Routes>
